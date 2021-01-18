@@ -2,6 +2,7 @@ package net.nanai10a.twomeat.cli.inits
 
 import net.dv8tion.jda.api.JDA
 import net.nanai10a.twomeat.cli.controllers.DiscordViewDestinationStore
+import net.nanai10a.twomeat.cli.controllers.IdController
 import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.gateways.id.IIdRepository
 import net.nanai10a.twomeat.cli.gateways.id.RedisIdRepository
@@ -129,7 +130,12 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
     register(UserController::class.java) {
         UserController(
             create(IUserGetUsecase::class.java),
-            create(IUserSaveUsecase::class.java),
+            create(IUserSaveUsecase::class.java)
+        )
+    }
+
+    register(IdController::class.java) {
+        IdController(
             create(IIdGetUsecase::class.java)
         )
     }
