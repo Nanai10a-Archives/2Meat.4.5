@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.inits.productionDI
-import net.nanai10a.twomeat.cli.presenters.DiscordIdGetEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.DiscordUserGetEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.DiscordUserSaveEventTransmissioner
+import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetEventTransmissioner
+import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetEventTransmissioner
+import net.nanai10a.twomeat.cli.presenters.user.save.DiscordUserSaveEventTransmissioner
 import net.nanai10a.twomeat.cli.usecases.SessionData
 import net.nanai10a.twomeat.cli.utils.Env
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
