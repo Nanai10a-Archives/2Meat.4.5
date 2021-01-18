@@ -1,9 +1,9 @@
 package net.nanai10a.twomeat.cli.utils
 
 data class Env (
-    val redisIp: String = getEnv(""),
-    val redisPort: Int = getEnv("").toInt(),
-    val discordToken: String = getEnv("")
+    val redisIp: String = getEnv("TWOMEAT_CLI_REDIS_IP"),
+    val redisPort: Int = getEnv("TWOMEAT_CLI_REDIS_PORT").toInt(),
+    val discordToken: String = getEnv("TWOMEAT_CLI_DISCORD_TOKEN")
 )
 
 private fun getEnv(name: String): String {
