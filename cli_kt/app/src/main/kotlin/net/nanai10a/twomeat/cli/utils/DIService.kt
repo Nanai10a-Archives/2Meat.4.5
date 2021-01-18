@@ -11,10 +11,11 @@ class DIService(internal val env: Env = Env()) {
         this.constructors[interfaceClass] = constructor as () -> Any
     }
 
-    fun create(interfaceClass: Class<*>): Any {
+    fun <T> create(interfaceClass: Class<T>): T {
         if (!constructors.keys.contains(interfaceClass))
             throw Exception("The specified interface was not registered!")
 
-        return this.constructors[interfaceClass] as Any
+        @Suppress("UNCHECKED_CAST")
+        return this.constructors[interfaceClass] as T
     }
 }
