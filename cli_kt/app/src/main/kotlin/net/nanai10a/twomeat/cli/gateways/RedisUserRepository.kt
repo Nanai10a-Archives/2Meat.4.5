@@ -58,22 +58,29 @@ class RedisUserRepository(private val redisClient: RedisClient) : IUserRepositor
 }
 
 
-private class RedisUserCodec : RedisCodec<String, User> {
+private class RedisUserCodec : JedisCodec<String, User> {
     private val gson = Gson()
-    override fun decodeKey(bytes: ByteBuffer?): String {
+    override fun decodeKey(bytes: ByteArray): String {
         return bytes.toString()
     }
 
-    override fun decodeValue(bytes: ByteBuffer?): User {
+    override fun decodeValue(bytes: ByteArray): User {
         return this.gson.fromJson(bytes.toString(), User::class.java)
     }
 
-    override fun encodeKey(key: String?): ByteBuffer {
-        return ByteBuffer.wrap(key?.encodeToByteArray())
+    override fun encodeKey(key: String): ByteArray {
+        return key.encodeToByteArray()
     }
 
-    override fun encodeValue(value: User?): ByteBuffer {
-        return ByteBuffer.wrap(this.gson.toJson(value).encodeToByteArray())
+    override fun encodeValue(value: User): ByteArray {
+        return this.gson.toJson(value).encodeToByteArray()
     }
 
+}
+
+interface JedisCodec<K, V> {
+    fun decodeKey(bytes: ByteArray): K
+    fun decodeValue(bytes: ByteArray): V
+    fun encodeKey(key: K): ByteArray
+    fun encodeValue(value: V): ByteArray
 }
