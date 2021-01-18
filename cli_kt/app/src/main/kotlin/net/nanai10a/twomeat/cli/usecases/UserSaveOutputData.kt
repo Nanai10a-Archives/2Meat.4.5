@@ -1,3 +1,5 @@
 package net.nanai10a.twomeat.cli.usecases
 
-class UserSaveOutputData
+import java.util.*
+
+class UserSaveOutputData(sessionId: UUID) : SessionData(sessionId)

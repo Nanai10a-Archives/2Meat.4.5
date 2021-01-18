@@ -1,5 +1,6 @@
 package net.nanai10a.twomeat.cli.usecases
 
 import net.nanai10a.twomeat.cli.entities.User
+import java.util.*
 
-data class UserSaveInputData(val user: User)
+class UserSaveInputData(sessionId: UUID, val user: User) : SessionData(sessionId)

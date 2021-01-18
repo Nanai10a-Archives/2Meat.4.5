@@ -1,5 +1,7 @@
 package net.nanai10a.twomeat.cli.controllers
 
-data class DiscordViewDestinationStore(val store: Map<String, DiscordDestination> = mapOf())
+import net.nanai10a.twomeat.cli.usecases.SessionData
+
+data class DiscordViewDestinationStore(val store: Map<SessionData, DiscordDestination> = mapOf())
 
 data class DiscordDestination(val channelId: String, val types: DiscordViewDestinationTypes)
