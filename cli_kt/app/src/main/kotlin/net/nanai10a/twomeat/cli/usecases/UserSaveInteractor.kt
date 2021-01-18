@@ -7,6 +7,6 @@ class UserSaveInteractor(private val presenter: IUserSavePresenter, private val 
     IUserSaveUsecase {
     override fun handle(input: UserSaveInputData) {
         repository.save(input.user)
-        this.presenter.complete(UserSaveOutputData())
+        this.presenter.complete(UserSaveOutputData(input.sessionData))
     }
 }
