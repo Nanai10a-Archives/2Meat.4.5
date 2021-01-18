@@ -5,6 +5,6 @@ import java.util.*
 
 interface IUserRepository {
     fun save(user: User)
-    fun load(discordId: String): User
+    fun load(id: UUID): User?
     fun delete(id: UUID)
 }
