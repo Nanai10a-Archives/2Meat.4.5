@@ -4,8 +4,7 @@ class DiscordUserGetEventTransmissioner : EventTransmissioner<DiscordUserGetEven
     override val receivers: List<EventReceiver<DiscordUserGetEvent>> = listOf()
 }
 
-class DiscordUserGetEventReceiver : EventReceiver<DiscordUserGetEvent> {
-    override fun onReceive(event: DiscordUserGetEvent) {
-        TODO("Not yet implemented")
-    }
+class DiscordUserGetEventReceiver(private val view: IDiscordView<DiscordUserGetViewModel>) :
+    EventReceiver<DiscordUserGetEvent> {
+    override fun onReceive(event: DiscordUserGetEvent) = this.view.invoke(event.sessionData, event.model)
 }

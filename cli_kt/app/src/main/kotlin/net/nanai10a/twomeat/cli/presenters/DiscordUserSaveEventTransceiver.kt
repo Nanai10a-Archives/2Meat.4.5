@@ -4,8 +4,7 @@ class DiscordUserSaveEventTransmissioner : EventTransmissioner<DiscordUserSaveEv
     override val receivers: List<EventReceiver<DiscordUserSaveEvent>> = listOf()
 }
 
-class DiscordUserSaveEventReceiver : EventReceiver<DiscordUserSaveEvent> {
-    override fun onReceive(event: DiscordUserSaveEvent) {
-        TODO("Not yet implemented")
-    }
+class DiscordUserSaveEventReceiver(private val view: IDiscordView<DiscordUserSaveViewModel>) :
+    EventReceiver<DiscordUserSaveEvent> {
+    override fun onReceive(event: DiscordUserSaveEvent) = view.invoke(event.sessionData, event.model)
 }

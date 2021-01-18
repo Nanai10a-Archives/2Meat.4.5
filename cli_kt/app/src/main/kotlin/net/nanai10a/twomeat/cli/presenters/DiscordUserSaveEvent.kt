@@ -1,3 +1,5 @@
 package net.nanai10a.twomeat.cli.presenters
 
-data class DiscordUserSaveEvent(val model: DiscordUserSaveViewModel)
+import net.nanai10a.twomeat.cli.usecases.SessionData
+
+data class DiscordUserSaveEvent(val sessionData: SessionData, val model: DiscordUserSaveViewModel)
