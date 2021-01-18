@@ -3,13 +3,12 @@ package net.nanai10a.twomeat.cli.inits
 import net.dv8tion.jda.api.JDA
 import net.nanai10a.twomeat.cli.controllers.DiscordViewDestinationStore
 import net.nanai10a.twomeat.cli.controllers.UserController
+import net.nanai10a.twomeat.cli.gateways.IIdRepository
 import net.nanai10a.twomeat.cli.gateways.IUserRepository
+import net.nanai10a.twomeat.cli.gateways.RedisIdRepository
 import net.nanai10a.twomeat.cli.gateways.RedisUserRepository
 import net.nanai10a.twomeat.cli.presenters.*
-import net.nanai10a.twomeat.cli.usecases.IUserGetUsecase
-import net.nanai10a.twomeat.cli.usecases.IUserSaveUsecase
-import net.nanai10a.twomeat.cli.usecases.UserGetInteractor
-import net.nanai10a.twomeat.cli.usecases.UserSaveInteractor
+import net.nanai10a.twomeat.cli.usecases.*
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
 import redis.clients.jedis.Jedis
 
@@ -36,14 +35,18 @@ fun ServiceProvider.discordViewDI(jda: JDA, destinationStore: DiscordViewDestina
 }
 
 fun ServiceProvider.repositoryDI(): ServiceProvider {
-    register(IUserRepository::class.java) { RedisUserRepository(Jedis(this.env.redisIp, this.env.redisPort)) }
+    val jedis = Jedis(this.env.redisIp, this.env.redisPort)
+
+    register(IUserRepository::class.java) { RedisUserRepository(jedis) }
+    register(IIdRepository::class.java) { RedisIdRepository(jedis) }
 
     return this
 }
 
 fun ServiceProvider.transceiverDI(
     userGetTransmissioner: DiscordUserGetEventTransmissioner,
-    userSaveTransmissioner: DiscordUserSaveEventTransmissioner
+    userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
+    idGetTransmissioner: DiscordIdGetEventTransmissioner
 ): ServiceProvider {
     register(DiscordUserGetEventTransmissioner::class.java) {
         userGetTransmissioner
@@ -51,6 +54,10 @@ fun ServiceProvider.transceiverDI(
 
     register(DiscordUserSaveEventTransmissioner::class.java) {
         userSaveTransmissioner
+    }
+
+    register(DiscordIdGetEventTransmissioner::class.java) {
+        idGetTransmissioner
     }
 
     return this
@@ -66,6 +73,12 @@ fun ServiceProvider.presenterDI(): ServiceProvider {
     register(IUserSavePresenter::class.java) {
         DiscordUserSavePresenter(
             create(DiscordUserSaveEventTransmissioner::class.java)
+        )
+    }
+
+    register(IIdGetPresenter::class.java) {
+        DiscordIdGetPresenter(
+            create(DiscordIdGetEventTransmissioner::class.java)
         )
     }
 
@@ -87,6 +100,13 @@ fun ServiceProvider.interactorDI(): ServiceProvider {
         )
     }
 
+    register(IIdGetUsecase::class.java) {
+        IdGetInteractor(
+            create(IIdGetPresenter::class.java),
+            create(IIdRepository::class.java)
+        )
+    }
+
     return this
 }
 
@@ -94,7 +114,8 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
     register(UserController::class.java) {
         UserController(
             create(IUserGetUsecase::class.java),
-            create(IUserSaveUsecase::class.java)
+            create(IUserSaveUsecase::class.java),
+            create(IIdGetUsecase::class.java)
         )
     }
 
@@ -104,7 +125,8 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
 fun ServiceProvider.productionDI(
     jda: JDA,
     userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
-    userGetTransmissioner: DiscordUserGetEventTransmissioner
+    userGetTransmissioner: DiscordUserGetEventTransmissioner,
+    idGetTransmissioner: DiscordIdGetEventTransmissioner
 ): ServiceProvider {
     val viewDestinationStore = DiscordViewDestinationStore()
 
@@ -113,7 +135,7 @@ fun ServiceProvider.productionDI(
     // 依存なし
     repositoryDI()
     // 依存なし
-    transceiverDI(userGetTransmissioner, userSaveTransmissioner)
+    transceiverDI(userGetTransmissioner, userSaveTransmissioner, idGetTransmissioner)
     // Transceiverに依存
     presenterDI()
     // Repository, Presenterに依存
