@@ -7,11 +7,11 @@ import java.util.*
 class JedisUserCodec : JedisCodec<UUID, User> {
     private val gson = Gson()
     override fun decodeKey(bytes: ByteArray): UUID {
-        return UUID.fromString(bytes.toString())
+        return UUID.fromString(bytes.decodeToString())
     }
 
     override fun decodeValue(bytes: ByteArray): User {
-        return this.gson.fromJson(bytes.toString(), User::class.java)
+        return this.gson.fromJson(bytes.decodeToString(), User::class.java)
     }
 
     override fun encodeKey(key: UUID): ByteArray {
