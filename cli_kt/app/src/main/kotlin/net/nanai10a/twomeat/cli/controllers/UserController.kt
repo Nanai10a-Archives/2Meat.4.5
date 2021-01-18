@@ -2,18 +2,18 @@ package net.nanai10a.twomeat.cli.controllers
 
 import net.nanai10a.twomeat.cli.db.entities.History
 import net.nanai10a.twomeat.cli.db.entities.User
-import net.nanai10a.twomeat.cli.usecases.DiscordUserGetInputData
-import net.nanai10a.twomeat.cli.usecases.IDiscordUserGetUsecase
+import net.nanai10a.twomeat.cli.usecases.UserGetInputData
+import net.nanai10a.twomeat.cli.usecases.IUserGetUsecase
 import net.nanai10a.twomeat.cli.usecases.IUserSaveUsecase
 import net.nanai10a.twomeat.cli.usecases.UserSaveInputData
 import java.util.*
 
 class UserController(
-    private val userGetUsecase: IDiscordUserGetUsecase,
+    private val userGetUsecase: IUserGetUsecase,
     private val userSaveUsecase: IUserSaveUsecase
 ) {
     fun getUser(discordId: String) {
-        this.userGetUsecase.handle(DiscordUserGetInputData(discordId))
+        this.userGetUsecase.handle(UserGetInputData(discordId))
     }
 
     fun saveUser(user: User) {
