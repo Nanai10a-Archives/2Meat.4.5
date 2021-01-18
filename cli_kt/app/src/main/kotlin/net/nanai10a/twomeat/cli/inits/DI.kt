@@ -1,5 +1,6 @@
 package net.nanai10a.twomeat.cli.inits
 
+import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.db.gateways.IUserRepository
 import net.nanai10a.twomeat.cli.gateways.RedisUserRepository
 import net.nanai10a.twomeat.cli.presenters.DiscordUserGetPresenter
@@ -23,15 +24,26 @@ fun DIService.productionDI(): DIService {
 fun DIService.interactorDI(): DIService {
     register(IUserGetUsecase::class.java) {
         UserGetInteractor(
-            this.create(IUserGetPresenter::class.java) as IUserGetPresenter,
-            this.create(IUserRepository::class.java) as IUserRepository
+            create(IUserGetPresenter::class.java) as IUserGetPresenter,
+            create(IUserRepository::class.java) as IUserRepository
         )
     }
 
     register(IUserSaveUsecase::class.java) {
         UserSaveInteractor(
-            this.create(IUserSavePresenter::class.java) as IUserSavePresenter,
-            this.create(IUserRepository::class.java) as IUserRepository
+            create(IUserSavePresenter::class.java) as IUserSavePresenter,
+            create(IUserRepository::class.java) as IUserRepository
+        )
+    }
+
+    return this
+}
+
+fun DIService.controllerDI(): DIService {
+    register(UserController::class.java) {
+        UserController(
+            create(IUserGetUsecase::class.java) as IUserGetUsecase,
+            create(IUserSaveUsecase::class.java) as IUserSaveUsecase
         )
     }
 
