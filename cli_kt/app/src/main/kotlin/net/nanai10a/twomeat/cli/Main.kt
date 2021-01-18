@@ -1,8 +1,7 @@
 package net.nanai10a.twomeat.cli
 
 import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.nanai10a.twomeat.cli.controllers.IdController
 import net.nanai10a.twomeat.cli.controllers.UserController
@@ -10,7 +9,6 @@ import net.nanai10a.twomeat.cli.inits.productionDI
 import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetEventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetEventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.user.save.DiscordUserSaveEventTransmissioner
-import net.nanai10a.twomeat.cli.usecases.SessionData
 import net.nanai10a.twomeat.cli.utils.Env
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
 import java.util.*
@@ -44,6 +42,15 @@ fun main() {
         override fun onMessageReceived(event: MessageReceivedEvent) =
             commandListener.onCommand(parseCommand(event.message.contentRaw))
     })
+}
+
+class CommandListener(
+    private val userController: UserController,
+    private val idController: IdController
+) {
+    fun onCommand(commands: List<String>): Unit {
+
+    }
 }
 
 /**
