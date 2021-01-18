@@ -2,12 +2,12 @@ package net.nanai10a.twomeat.cli.commands
 
 class CommandListener {
     private val functions = mutableListOf<CommandFunction>()
-    fun addCommandFunction(function: CommandFunction) {
-        this.functions.add(function)
+    fun addCommandFunction(vararg functions: CommandFunction) {
+        this.functions.addAll(functions)
     }
 
-    fun removeCommandFunction(function: CommandFunction) {
-        this.functions.remove(function)
+    fun removeCommandFunction(vararg functions: CommandFunction) {
+        this.functions.removeAll(functions)
     }
 
     private fun onCommandWithParsedArgs(args: List<String>) {

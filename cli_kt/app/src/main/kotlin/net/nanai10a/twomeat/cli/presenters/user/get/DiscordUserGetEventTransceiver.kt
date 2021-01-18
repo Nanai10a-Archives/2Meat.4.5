@@ -5,7 +5,7 @@ import net.nanai10a.twomeat.cli.presenters.EventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.IDiscordView
 
 class DiscordUserGetEventTransmissioner : EventTransmissioner<DiscordUserGetEvent> {
-    override val receivers: List<EventReceiver<DiscordUserGetEvent>> = listOf()
+    override val receivers: MutableList<EventReceiver<DiscordUserGetEvent>> = mutableListOf()
 }
 
 class DiscordUserGetEventReceiver(private val view: IDiscordView<DiscordUserGetViewModel>) :
