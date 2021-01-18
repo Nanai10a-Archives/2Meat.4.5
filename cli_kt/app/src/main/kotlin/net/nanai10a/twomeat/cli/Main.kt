@@ -8,6 +8,6 @@ import net.nanai10a.twomeat.cli.utils.Env
 fun main() {
     val env = Env()
 
-    val service = DIService().productionDI().interactorDI()
+    val service = DIService(env).productionDI().interactorDI()
 
 }
