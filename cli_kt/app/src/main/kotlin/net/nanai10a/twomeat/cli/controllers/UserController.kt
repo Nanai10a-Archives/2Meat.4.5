@@ -12,8 +12,8 @@ class UserController(
     private val userGetUsecase: IUserGetUsecase,
     private val userSaveUsecase: IUserSaveUsecase
 ) {
-    fun getUser(discordId: String) {
-        this.userGetUsecase.handle(UserGetInputData(discordId))
+    fun getUser(id: UUID) {
+        this.userGetUsecase.handle(UserGetInputData(id))
     }
 
     fun saveUser(user: User) {
