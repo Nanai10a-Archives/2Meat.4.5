@@ -1,4 +1,4 @@
-package net.nanai10a.twomeat.cli.db.gateways
+package net.nanai10a.twomeat.cli.gateways
 
 import net.nanai10a.twomeat.cli.db.entities.User
 import java.util.*

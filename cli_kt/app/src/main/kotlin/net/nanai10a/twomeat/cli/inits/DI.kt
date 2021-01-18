@@ -1,7 +1,7 @@
 package net.nanai10a.twomeat.cli.inits
 
 import net.nanai10a.twomeat.cli.controllers.UserController
-import net.nanai10a.twomeat.cli.db.gateways.IUserRepository
+import net.nanai10a.twomeat.cli.gateways.IUserRepository
 import net.nanai10a.twomeat.cli.gateways.RedisUserRepository
 import net.nanai10a.twomeat.cli.presenters.DiscordUserGetPresenter
 import net.nanai10a.twomeat.cli.presenters.DiscordUserSavePresenter

@@ -1,6 +1,6 @@
 package net.nanai10a.twomeat.cli.usecases
 
-import net.nanai10a.twomeat.cli.db.gateways.IUserRepository
+import net.nanai10a.twomeat.cli.gateways.IUserRepository
 import net.nanai10a.twomeat.cli.presenters.IUserGetPresenter
 
 class UserGetInteractor(private val presenter: IUserGetPresenter, private val repository: IUserRepository) :
