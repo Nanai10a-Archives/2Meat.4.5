@@ -10,6 +10,7 @@ import net.nanai10a.twomeat.cli.gateways.user.IUserRepository
 import net.nanai10a.twomeat.cli.gateways.user.RedisUserRepository
 import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetEventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetPresenter
+import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetView
 import net.nanai10a.twomeat.cli.presenters.id.get.IIdGetPresenter
 import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetEventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetPresenter
@@ -59,7 +60,7 @@ fun ServiceProvider.repositoryDI(): ServiceProvider {
     return this
 }
 
-fun ServiceProvider.transceiverDI(
+fun ServiceProvider.transmissionerDI(
     userGetTransmissioner: DiscordUserGetEventTransmissioner,
     userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
     idGetTransmissioner: DiscordIdGetEventTransmissioner
@@ -143,26 +144,30 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
     return this
 }
 
-fun ServiceProvider.productionDI(
-    jda: JDA,
-    userGetTransmissioner: DiscordUserGetEventTransmissioner,
-    userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
-    idGetTransmissioner: DiscordIdGetEventTransmissioner
-): ServiceProvider {
+fun ServiceProvider.productionDI(jda: JDA): ServiceProvider {
     val viewDestinationStore = DiscordViewDestinationStore()
+
+    val userGetTransmissioner = DiscordUserGetEventTransmissioner()
+    val userSaveTransmissioner = DiscordUserSaveEventTransmissioner()
+    val idGetTransmissioner =  DiscordIdGetEventTransmissioner()
 
     // 依存なし
     discordViewDI(jda, viewDestinationStore)
     // 依存なし
     repositoryDI()
     // 依存なし
-    transceiverDI(userGetTransmissioner, userSaveTransmissioner, idGetTransmissioner)
+    transmissionerDI(userGetTransmissioner, userSaveTransmissioner, idGetTransmissioner)
     // Transceiverに依存
     presenterDI()
     // Repository, Presenterに依存
     interactorDI()
     // Usecase(Interactor)に依存
     controllerDI()
+
+
+    create(DiscordUserGetView::class.java)
+    create(DiscordUserSaveView::class.java)
+    create(DiscordIdGetView::class.java)
 
     return this
 }

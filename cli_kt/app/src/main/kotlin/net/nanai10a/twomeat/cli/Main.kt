@@ -16,21 +16,12 @@ import net.nanai10a.twomeat.cli.utils.ServiceProvider
 fun main() {
     val env = Env()
 
-    val userGetTransmissioner = DiscordUserGetEventTransmissioner()
-    val userSaveTransmissioner = DiscordUserSaveEventTransmissioner()
-    val idGetTransmissioner = DiscordIdGetEventTransmissioner()
-
     val jda = JDABuilder.createLight(env.discordToken).build()
     jda.awaitReady()
 
     val service =
         ServiceProvider(env)
-            .productionDI(
-                jda,
-                userGetTransmissioner,
-                userSaveTransmissioner,
-                idGetTransmissioner
-            )
+            .productionDI(jda)
 
     val userController = service.create(UserController::class.java)
     val idController = service.create(IdController::class.java)
