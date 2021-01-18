@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.nanai10a.twomeat.cli.controllers.IdController
 import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.inits.productionDI
 import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetEventTransmissioner
@@ -27,7 +28,8 @@ fun main() {
     val service =
         ServiceProvider(env).productionDI(jda, userSaveTransmissioner, userGetTransmissioner, idGetTransmissioner)
 
-    val controller = service.create(UserController::class.java)
+    val userController = service.create(UserController::class.java)
+    val idController = service.create(IdController::class.java)
 
     jda.addEventListener(object : ListenerAdapter() {
         override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
@@ -36,7 +38,7 @@ fun main() {
 
         override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
             when (event.message.contentRaw) {
-                "getId" -> controller.getId(SessionData(UUID.randomUUID()), event.author.id)
+                "getId" -> idController.getId(SessionData(UUID.randomUUID()), event.author.id)
                 "getUser" -> TODO("面倒くさい太郎")
                 "save" -> TODO("面倒くさい太郎")
             }
