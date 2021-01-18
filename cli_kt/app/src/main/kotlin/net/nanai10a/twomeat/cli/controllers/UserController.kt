@@ -2,25 +2,27 @@ package net.nanai10a.twomeat.cli.controllers
 
 import net.nanai10a.twomeat.cli.entities.History
 import net.nanai10a.twomeat.cli.entities.User
-import net.nanai10a.twomeat.cli.usecases.IUserGetUsecase
-import net.nanai10a.twomeat.cli.usecases.IUserSaveUsecase
-import net.nanai10a.twomeat.cli.usecases.UserGetInputData
-import net.nanai10a.twomeat.cli.usecases.UserSaveInputData
+import net.nanai10a.twomeat.cli.usecases.*
 import java.util.*
 
 class UserController(
     private val userGetUsecase: IUserGetUsecase,
     private val userSaveUsecase: IUserSaveUsecase
 ) {
-    fun getUser(id: UUID) {
-        this.userGetUsecase.handle(UserGetInputData(id))
+    fun getUser(sessionData: SessionData, id: UUID) {
+        this.userGetUsecase.handle(UserGetInputData(sessionData, id))
     }
 
-    fun saveUser(user: User) {
-        this.userSaveUsecase.handle(UserSaveInputData(user))
+    fun saveUser(sessionData: SessionData, user: User) {
+        this.userSaveUsecase.handle(UserSaveInputData(sessionData, user))
     }
 
-    fun saveUser(name: String, discordId: String) {
-        this.userSaveUsecase.handle(UserSaveInputData(User(UUID.randomUUID(), name, discordId, History(arrayOf()))))
+    fun saveUser(sessionData: SessionData, name: String, discordId: String) {
+        this.userSaveUsecase.handle(
+            UserSaveInputData(
+                sessionData,
+                User(UUID.randomUUID(), name, discordId, History(arrayOf()))
+            )
+        )
     }
 }
