@@ -24,7 +24,20 @@ fun main() {
 
     val controller = service.create(UserController::class.java)
 
-    val controller = service.create(UserController::class.java) as UserController
+    jda.addEventListener(object : ListenerAdapter() {
+        override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
+            TODO()
+        }
 
-
+        override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
+            when (event.message.contentRaw) {
+                "get" -> {
+                    TODO()
+                }
+                "save" -> {
+                    TODO()
+                }
+            }
+        }
+    })
 }
