@@ -1,3 +1,5 @@
 package net.nanai10a.twomeat.cli.usecases
 
-data class UserGetInputData(val discordId: String)
+import java.util.*
+
+data class UserGetInputData(val id: UUID)

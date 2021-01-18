@@ -6,6 +6,6 @@ import net.nanai10a.twomeat.cli.presenters.IUserGetPresenter
 class UserGetInteractor(private val presenter: IUserGetPresenter, private val repository: IUserRepository) :
     IUserGetUsecase {
     override fun handle(input: UserGetInputData) {
-        this.presenter.complete(UserGetOutputData(this.repository.load(input.discordId)))
+        this.presenter.complete(UserGetOutputData(this.repository.load(input.id)))
     }
 }
