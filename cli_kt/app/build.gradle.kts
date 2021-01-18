@@ -38,5 +38,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("net.nanai10a.twomeat.cli.discord.AppKt")
+    mainClass.set("net.nanai10a.twomeat.cli.MainKt")
 }
