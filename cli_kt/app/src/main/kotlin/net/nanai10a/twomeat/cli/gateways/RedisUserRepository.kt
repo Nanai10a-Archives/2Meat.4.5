@@ -17,3 +17,24 @@ class RedisUserRepository : IUserRepository {
         TODO("Not yet implemented")
     }
 }
+
+
+private class RedisUserCodec : RedisCodec<String, User> {
+    private val gson = Gson()
+    override fun decodeKey(bytes: ByteBuffer?): String {
+        return bytes.toString()
+    }
+
+    override fun decodeValue(bytes: ByteBuffer?): User {
+        return this.gson.fromJson(bytes.toString(), User::class.java)
+    }
+
+    override fun encodeKey(key: String?): ByteBuffer {
+        return ByteBuffer.wrap(key?.encodeToByteArray())
+    }
+
+    override fun encodeValue(value: User?): ByteBuffer {
+        return ByteBuffer.wrap(this.gson.toJson(value).encodeToByteArray())
+    }
+
+}
