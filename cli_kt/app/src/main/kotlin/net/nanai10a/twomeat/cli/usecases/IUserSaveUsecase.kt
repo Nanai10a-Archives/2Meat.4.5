@@ -1,4 +1,4 @@
-package net.nanai10a.twomeat.cli.db.usecases.save
+package net.nanai10a.twomeat.cli.usecases
 
 interface IUserSaveUsecase {
     fun handle(input: UserSaveInputData): UserSaveOutputData
