@@ -19,6 +19,10 @@ dependencies {
     // Discord
     implementation("net.dv8tion:JDA:4.2.0_227")
 
+    // slf4j implementation
+    implementation("org.apache.logging.log4j:log4j-api:2.14.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.14.0")
+
     // Redis
     implementation("io.lettuce:lettuce-core:6.0.2.RELEASE")
 
