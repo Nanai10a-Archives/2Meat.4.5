@@ -2,9 +2,9 @@ package net.nanai10a.twomeat.cli.controllers
 
 import net.nanai10a.twomeat.cli.db.entities.History
 import net.nanai10a.twomeat.cli.db.entities.User
-import net.nanai10a.twomeat.cli.usecases.UserGetInputData
 import net.nanai10a.twomeat.cli.usecases.IUserGetUsecase
 import net.nanai10a.twomeat.cli.usecases.IUserSaveUsecase
+import net.nanai10a.twomeat.cli.usecases.UserGetInputData
 import net.nanai10a.twomeat.cli.usecases.UserSaveInputData
 import java.util.*
 
