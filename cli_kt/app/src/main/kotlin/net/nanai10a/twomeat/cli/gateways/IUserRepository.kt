@@ -1,6 +1,6 @@
 package net.nanai10a.twomeat.cli.gateways
 
-import net.nanai10a.twomeat.cli.db.entities.User
+import net.nanai10a.twomeat.cli.entities.User
 import java.util.*
 
 interface IUserRepository {

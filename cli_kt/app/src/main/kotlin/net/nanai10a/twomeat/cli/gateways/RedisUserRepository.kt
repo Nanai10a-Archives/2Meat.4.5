@@ -1,7 +1,7 @@
 package net.nanai10a.twomeat.cli.gateways
 
 import com.google.gson.Gson
-import net.nanai10a.twomeat.cli.db.entities.User
+import net.nanai10a.twomeat.cli.entities.User
 import redis.clients.jedis.Jedis
 import java.util.*
 

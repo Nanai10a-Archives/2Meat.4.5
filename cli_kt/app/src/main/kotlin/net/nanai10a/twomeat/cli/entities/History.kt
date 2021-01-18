@@ -1,4 +1,4 @@
-package net.nanai10a.twomeat.cli.db.entities
+package net.nanai10a.twomeat.cli.entities
 
 data class History(val history: Array<Command>) {
     // Generated.
