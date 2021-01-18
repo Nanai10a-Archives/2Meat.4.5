@@ -32,10 +32,12 @@ fun main() {
                 idGetTransmissioner
             )
 
+    val userController = service.create(UserController::class.java)
+    val idController = service.create(IdController::class.java)
+
     val commandListener = CommandListener()
 
-    service.create(UserController::class.java)
-    service.create(IdController::class.java)
+    // add commands.
 
     jda.addEventListener(object : ListenerAdapter() {
         override fun onMessageReceived(event: MessageReceivedEvent) =
