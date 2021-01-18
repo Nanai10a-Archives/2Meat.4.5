@@ -1,12 +1,11 @@
 package net.nanai10a.twomeat.cli.inits
 
+import net.dv8tion.jda.api.JDA
+import net.nanai10a.twomeat.cli.controllers.DiscordViewDestinationStore
 import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.gateways.IUserRepository
 import net.nanai10a.twomeat.cli.gateways.RedisUserRepository
-import net.nanai10a.twomeat.cli.presenters.DiscordUserGetPresenter
-import net.nanai10a.twomeat.cli.presenters.DiscordUserSavePresenter
-import net.nanai10a.twomeat.cli.presenters.IUserGetPresenter
-import net.nanai10a.twomeat.cli.presenters.IUserSavePresenter
+import net.nanai10a.twomeat.cli.presenters.*
 import net.nanai10a.twomeat.cli.usecases.IUserGetUsecase
 import net.nanai10a.twomeat.cli.usecases.IUserSaveUsecase
 import net.nanai10a.twomeat.cli.usecases.UserGetInteractor
@@ -14,9 +13,60 @@ import net.nanai10a.twomeat.cli.usecases.UserSaveInteractor
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
 import redis.clients.jedis.Jedis
 
-fun ServiceProvider.productionDI(): ServiceProvider {
-    register(IUserGetPresenter::class.java) { DiscordUserGetPresenter() }
-    register(IUserSavePresenter::class.java) { DiscordUserSavePresenter() }
+fun ServiceProvider.transceiverDI(
+    userGetTransmissioner: DiscordUserGetEventTransmissioner,
+    userSaveTransmissioner: DiscordUserSaveEventTransmissioner
+): ServiceProvider {
+    register(DiscordUserGetEventTransmissioner::class.java) {
+        userGetTransmissioner
+    }
+
+    register(DiscordUserSaveEventTransmissioner::class.java) {
+        userSaveTransmissioner
+    }
+
+    return this
+}
+
+fun ServiceProvider.discordViewDI(jda: JDA, destinationStore: DiscordViewDestinationStore): ServiceProvider {
+    register(
+        DiscordUserGetView::class.java
+    ) {
+        DiscordUserGetView(
+            jda,
+            destinationStore
+        )
+    }
+
+    register(
+        DiscordUserSaveView::class.java
+    ) {
+        DiscordUserSaveView(
+            jda,
+            destinationStore
+        )
+    }
+
+    return this
+}
+
+fun ServiceProvider.presenterDI(): ServiceProvider {
+    register(IUserGetPresenter::class.java) {
+        DiscordUserGetPresenter(
+            create(DiscordUserGetEventTransmissioner::class.java)
+        )
+    }
+
+    register(IUserSavePresenter::class.java) {
+        DiscordUserSavePresenter(
+            create(DiscordUserSaveEventTransmissioner::class.java)
+        )
+    }
+
+    return this
+}
+
+fun ServiceProvider.repositoryDI(): ServiceProvider {
     register(IUserRepository::class.java) { RedisUserRepository(Jedis(this.env.redisIp, this.env.redisPort)) }
 
     return this
