@@ -1,13 +1,14 @@
 package net.nanai10a.twomeat.cli.utils
 
 class DIService {
-    private val constructors = mutableMapOf<Class<*>, Function<*>>()
+    private val constructors = mutableMapOf<Class<*>, (() -> Any)>()
 
-    fun <T> register(interfaceClass: Class<T>, constructor: Function<T>) {
+    fun <T> register(interfaceClass: Class<T>, constructor: () -> T) {
         if (constructors.keys.contains(interfaceClass))
             throw Exception("The specified interface was already registered!")
 
-        this.constructors[interfaceClass] = constructor
+        @Suppress("UNCHECKED_CAST")
+        this.constructors[interfaceClass] = constructor as () -> Any
     }
 
     fun create(interfaceClass: Class<*>): Any {
