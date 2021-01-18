@@ -1,75 +1,37 @@
 package net.nanai10a.twomeat.cli.gateways
 
 import com.google.gson.Gson
-import io.lettuce.core.RedisClient
-import io.lettuce.core.api.StatefulRedisConnection
-import io.lettuce.core.codec.RedisCodec
 import net.nanai10a.twomeat.cli.db.entities.User
 import net.nanai10a.twomeat.cli.db.gateways.IUserRepository
-import java.nio.ByteBuffer
+import redis.clients.jedis.Jedis
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.concurrent.scheduleAtFixedRate
 
-class RedisUserRepository(private val redisClient: RedisClient) : IUserRepository {
-    private val timer: Timer = Timer()
-    private var currentTask: TimerTask? = null
-
-    private val codec: RedisCodec<String, User> = RedisUserCodec()
-    private var connection: StatefulRedisConnection<String, User>? = null
-
-    private fun setTimer() {
-        cancelTimer()
-        this.currentTask = timer.scheduleAtFixedRate(TimeUnit.MINUTES.toMillis(3), 0) {
-            connection?.close()
-        }
-    }
-
-    private fun cancelTimer() = this.currentTask?.cancel()
-
-    private fun connectRedis(): StatefulRedisConnection<String, User> = redisClient.connect(this.codec)
-
-    private fun connectionEnsure() {
-        cancelTimer()
-        if (this.connection == null) {
-            this.connection = connectRedis()
-        }
-    }
-
+class RedisUserRepository(private val jedis: Jedis) : IUserRepository {
+    private val codec: JedisCodec<UUID, User> = JedisUserCodec()
     override fun save(user: User) {
-        connectionEnsure()
-
-        this.connection!!.
-
-        this.setTimer()
+        jedis.set(codec.encodeKey(user.id), codec.encodeValue(user))
     }
 
-    override fun load(discordId: String): User {
-
-        this.setTimer()
-        return TODO()
-    }
+    override fun load(id: UUID): User? = jedis.get(codec.encodeKey(id))?.let { codec.decodeValue(it) }
 
     override fun delete(id: UUID) {
-
-
-        this.setTimer()
+        jedis.del(codec.encodeKey(id))
     }
 }
 
 
-private class RedisUserCodec : JedisCodec<String, User> {
+private class JedisUserCodec : JedisCodec<UUID, User> {
     private val gson = Gson()
-    override fun decodeKey(bytes: ByteArray): String {
-        return bytes.toString()
+    override fun decodeKey(bytes: ByteArray): UUID {
+        return UUID.fromString(bytes.toString())
     }
 
     override fun decodeValue(bytes: ByteArray): User {
         return this.gson.fromJson(bytes.toString(), User::class.java)
     }
 
-    override fun encodeKey(key: String): ByteArray {
-        return key.encodeToByteArray()
+    override fun encodeKey(key: UUID): ByteArray {
+        return key.toString().encodeToByteArray()
     }
 
     override fun encodeValue(value: User): ByteArray {
