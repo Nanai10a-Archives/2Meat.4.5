@@ -145,8 +145,8 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
 
 fun ServiceProvider.productionDI(
     jda: JDA,
-    userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
     userGetTransmissioner: DiscordUserGetEventTransmissioner,
+    userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
     idGetTransmissioner: DiscordIdGetEventTransmissioner
 ): ServiceProvider {
     val viewDestinationStore = DiscordViewDestinationStore()
