@@ -45,36 +45,38 @@ fun main() {
 
 class CommandListener {
     private val functions = mutableListOf<CommandFunction>()
-    fun onCommand(commands: List<String>) {
+    fun onCommand(args: List<String>) {
         val matchList = mutableListOf<CommandFunction>()
         functions.forEach { function ->
-            if (function.isMatchCommand(commands))
+            if (function.isCallable(args))
                 matchList.add(function)
         }
 
         if (matchList.size >= 2)
             throw RuntimeException("commands was matched 2 or more command_function! (expect 1 or none)")
 
-        matchList.firstOrNull()?.call(commands)
+        matchList.firstOrNull()?.call(args)
     }
 }
 
 interface CommandFunction {
-    val commandInfo: CommandInfo
-    fun isMatchCommand(commands: List<String>): Boolean {
-        val isPrefixesMatch = commands.slice(commandInfo.prefixes.indices).containsAll(commandInfo.prefixes)
+    val info: CommandFunctionInfo
+    fun isCallable(args: List<String>): Boolean {
+        val isPrefixesMatch =
+            args.slice(this.info.prefixes.indices)
+                .containsAll(this.info.prefixes)
 
         val isCommandLengthMatch =
-            if (commandInfo.isVariableLength) true
-            else commands.size == (commandInfo.commandsLength!!)
+            if (this.info.isVariableLength) true
+            else args.size == (this.info.argsLength!!)
 
         return isPrefixesMatch && isCommandLengthMatch
     }
 
-    fun call(commands: List<String>)
+    fun call(args: List<String>)
 }
 
-data class CommandInfo(val commandsLength: Int?, val prefixes: List<String>, val isVariableLength: Boolean)
+data class CommandFunctionInfo(val argsLength: Int?, val prefixes: List<String>, val isVariableLength: Boolean)
 
 /**
  * **rules:**
