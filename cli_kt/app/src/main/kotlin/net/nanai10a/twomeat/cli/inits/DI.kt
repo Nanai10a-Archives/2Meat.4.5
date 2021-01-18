@@ -100,3 +100,26 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
 
     return this
 }
+
+fun ServiceProvider.productionDI(
+    jda: JDA,
+    userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
+    userGetTransmissioner: DiscordUserGetEventTransmissioner
+): ServiceProvider {
+    val viewDestinationStore = DiscordViewDestinationStore()
+
+    // 依存なし
+    discordViewDI(jda, viewDestinationStore)
+    // 依存なし
+    repositoryDI()
+    // 依存なし
+    transceiverDI(userGetTransmissioner, userSaveTransmissioner)
+    // Transceiverに依存
+    presenterDI()
+    // Repository, Presenterに依存
+    interactorDI()
+    // Usecase(Interactor)に依存
+    controllerDI()
+
+    return this
+}
