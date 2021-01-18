@@ -26,23 +26,23 @@ fun main() {
     jda.awaitReady()
 
     val service =
-        ServiceProvider(env).productionDI(jda, userSaveTransmissioner, userGetTransmissioner, idGetTransmissioner)
+        ServiceProvider(env)
+            .productionDI(
+                jda,
+                userGetTransmissioner,
+                userSaveTransmissioner,
+                idGetTransmissioner
+            )
 
-    val userController = service.create(UserController::class.java)
-    val idController = service.create(IdController::class.java)
+    val commandListener =
+        CommandListener(
+            service.create(UserController::class.java),
+            service.create(IdController::class.java)
+        )
 
     jda.addEventListener(object : ListenerAdapter() {
-        override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
-            TODO("面倒くさい太郎")
-        }
-
-        override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
-            when (event.message.contentRaw) {
-                "getId" -> idController.getId(SessionData(UUID.randomUUID()), event.author.id)
-                "getUser" -> TODO("面倒くさい太郎")
-                "save" -> TODO("面倒くさい太郎")
-            }
-        }
+        override fun onMessageReceived(event: MessageReceivedEvent) =
+            commandListener.onCommand(parseCommand(event.message.contentRaw))
     })
 }
 
