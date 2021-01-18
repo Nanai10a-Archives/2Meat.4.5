@@ -7,6 +7,7 @@ import net.nanai10a.twomeat.cli.usecases.SessionData
 class DiscordUserGetView(override val jda: JDA, private val destinationStore: DiscordViewDestinationStore) :
     IDiscordView<DiscordUserGetViewModel> {
     override fun invoke(sessionData: SessionData, model: DiscordUserGetViewModel) {
+        TODO()
         val string = ""
         this.send(destinationStore.store[sessionData]!!, DiscordMessage(string, null, null))
     }
