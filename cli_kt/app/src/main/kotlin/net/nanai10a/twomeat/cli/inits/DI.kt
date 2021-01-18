@@ -25,15 +25,15 @@ fun DIService.productionDI(): DIService {
 fun DIService.interactorDI(): DIService {
     register(IUserGetUsecase::class.java) {
         UserGetInteractor(
-            create(IUserGetPresenter::class.java) as IUserGetPresenter,
-            create(IUserRepository::class.java) as IUserRepository
+            create(IUserGetPresenter::class.java),
+            create(IUserRepository::class.java)
         )
     }
 
     register(IUserSaveUsecase::class.java) {
         UserSaveInteractor(
-            create(IUserSavePresenter::class.java) as IUserSavePresenter,
-            create(IUserRepository::class.java) as IUserRepository
+            create(IUserSavePresenter::class.java),
+            create(IUserRepository::class.java)
         )
     }
 
@@ -43,8 +43,8 @@ fun DIService.interactorDI(): DIService {
 fun DIService.controllerDI(): DIService {
     register(UserController::class.java) {
         UserController(
-            create(IUserGetUsecase::class.java) as IUserGetUsecase,
-            create(IUserSaveUsecase::class.java) as IUserSaveUsecase
+            create(IUserGetUsecase::class.java),
+            create(IUserSaveUsecase::class.java)
         )
     }
 
