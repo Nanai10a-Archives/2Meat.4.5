@@ -32,11 +32,10 @@ fun main() {
                 idGetTransmissioner
             )
 
-    val commandListener =
-        CommandListener(
-            service.create(UserController::class.java),
-            service.create(IdController::class.java)
-        )
+    val commandListener = CommandListener()
+
+    service.create(UserController::class.java)
+    service.create(IdController::class.java)
 
     jda.addEventListener(object : ListenerAdapter() {
         override fun onMessageReceived(event: MessageReceivedEvent) =
@@ -44,14 +43,38 @@ fun main() {
     })
 }
 
-class CommandListener(
-    private val userController: UserController,
-    private val idController: IdController
-) {
-    fun onCommand(commands: List<String>): Unit {
+class CommandListener {
+    private val functions = mutableListOf<CommandFunction>()
+    fun onCommand(commands: List<String>) {
+        val matchList = mutableListOf<CommandFunction>()
+        functions.forEach { function ->
+            if (function.isMatchCommand(commands))
+                matchList.add(function)
+        }
 
+        if (matchList.size >= 2)
+            throw RuntimeException("commands was matched 2 or more command_function! (expect 1 or none)")
+
+        matchList.firstOrNull()?.call(commands)
     }
 }
+
+interface CommandFunction {
+    val commandInfo: CommandInfo
+    fun isMatchCommand(commands: List<String>): Boolean {
+        val isPrefixesMatch = commands.slice(commandInfo.prefixes.indices).containsAll(commandInfo.prefixes)
+
+        val isCommandLengthMatch =
+            if (commandInfo.isVariableLength) true
+            else commands.size == (commandInfo.commandsLength!!)
+
+        return isPrefixesMatch && isCommandLengthMatch
+    }
+
+    fun call(commands: List<String>)
+}
+
+data class CommandInfo(val commandsLength: Int?, val prefixes: List<String>, val isVariableLength: Boolean)
 
 /**
  * **rules:**
