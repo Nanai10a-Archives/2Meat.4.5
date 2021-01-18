@@ -9,8 +9,10 @@ import net.nanai10a.twomeat.cli.inits.productionDI
 import net.nanai10a.twomeat.cli.presenters.DiscordIdGetEventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.DiscordUserGetEventTransmissioner
 import net.nanai10a.twomeat.cli.presenters.DiscordUserSaveEventTransmissioner
+import net.nanai10a.twomeat.cli.usecases.SessionData
 import net.nanai10a.twomeat.cli.utils.Env
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
+import java.util.*
 
 fun main() {
     val env = Env()
@@ -29,17 +31,14 @@ fun main() {
 
     jda.addEventListener(object : ListenerAdapter() {
         override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
-            TODO()
+            TODO("面倒くさい太郎")
         }
 
         override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
             when (event.message.contentRaw) {
-                "get" -> {
-                    TODO()
-                }
-                "save" -> {
-                    TODO()
-                }
+                "getId" -> controller.getId(SessionData(UUID.randomUUID()), event.author.id)
+                "getUser" -> TODO("面倒くさい太郎")
+                "save" -> TODO("面倒くさい太郎")
             }
         }
     })
