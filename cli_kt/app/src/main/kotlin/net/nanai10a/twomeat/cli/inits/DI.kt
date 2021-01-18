@@ -12,11 +12,12 @@ import net.nanai10a.twomeat.cli.usecases.IUserSaveUsecase
 import net.nanai10a.twomeat.cli.usecases.UserGetInteractor
 import net.nanai10a.twomeat.cli.usecases.UserSaveInteractor
 import net.nanai10a.twomeat.cli.utils.DIService
+import redis.clients.jedis.Jedis
 
 fun DIService.productionDI(): DIService {
     register(IUserGetPresenter::class.java) { DiscordUserGetPresenter() }
     register(IUserSavePresenter::class.java) { DiscordUserSavePresenter() }
-    register(IUserRepository::class.java) { RedisUserRepository() }
+    register(IUserRepository::class.java) { RedisUserRepository(Jedis(this.env.redisIp, this.env.redisPort)) }
 
     return this
 }
