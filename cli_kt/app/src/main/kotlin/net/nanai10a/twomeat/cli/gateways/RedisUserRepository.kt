@@ -9,6 +9,10 @@ class RedisUserRepository : IUserRepository {
         TODO("Not yet implemented")
     }
 
+    override fun load(discordId: String): User {
+        TODO("Not yet implemented")
+    }
+
     override fun delete(id: UUID) {
         TODO("Not yet implemented")
     }
