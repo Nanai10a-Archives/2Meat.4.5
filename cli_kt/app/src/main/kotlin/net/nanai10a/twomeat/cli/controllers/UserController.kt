@@ -7,7 +7,8 @@ import java.util.*
 
 class UserController(
     private val userGetUsecase: IUserGetUsecase,
-    private val userSaveUsecase: IUserSaveUsecase
+    private val userSaveUsecase: IUserSaveUsecase,
+    private val idGetUsecase: IIdGetUsecase
 ) {
     fun getUser(sessionData: SessionData, id: UUID) {
         this.userGetUsecase.handle(UserGetInputData(sessionData, id))
@@ -22,6 +23,15 @@ class UserController(
             UserSaveInputData(
                 sessionData,
                 User(UUID.randomUUID(), name, discordId, History(arrayOf()))
+            )
+        )
+    }
+
+    fun getId(sessionData: SessionData, discordId: String) {
+        this.idGetUsecase.handle(
+            IdGetInputData(
+                sessionData,
+                discordId
             )
         )
     }
