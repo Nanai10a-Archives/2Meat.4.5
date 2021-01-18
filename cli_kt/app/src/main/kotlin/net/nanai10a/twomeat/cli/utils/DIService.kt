@@ -1,6 +1,6 @@
 package net.nanai10a.twomeat.cli.utils
 
-class DIService(private val env: Env = Env()) {
+class DIService(internal val env: Env = Env()) {
     private val constructors = mutableMapOf<Class<*>, (() -> Any)>()
 
     fun <T> register(interfaceClass: Class<T>, constructor: () -> T) {
