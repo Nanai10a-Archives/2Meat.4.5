@@ -22,6 +22,9 @@ dependencies {
     // Redis
     implementation("io.lettuce:lettuce-core:6.0.2.RELEASE")
 
+    // support JSON
+    implementation("com.google.code.gson:gson:2.8.6")
+
 }
 
 application {
