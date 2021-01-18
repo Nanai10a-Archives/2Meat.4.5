@@ -24,7 +24,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
 
     // Redis
-    implementation("io.lettuce:lettuce-core:6.0.2.RELEASE")
+    implementation("redis.clients:jedis:3.4.1")
 
     // support JSON
     implementation("com.google.code.gson:gson:2.8.6")
