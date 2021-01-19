@@ -37,8 +37,9 @@ fun main() {
                 else
                     DiscordViewDestinationTypes.PRIVATE
 
-            destinationStore.store[SessionData()] = DiscordDestination(event.channel.id, types)
-            commandListener.onCommand(event.message.contentRaw)
+            val sessionData = SessionData()
+            destinationStore.store[sessionData] = DiscordDestination(event.channel.id, types)
+            commandListener.onCommand(sessionData, event.message.contentRaw)
         }
     })
 }

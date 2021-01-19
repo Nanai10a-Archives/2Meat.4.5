@@ -1,5 +1,7 @@
 package net.nanai10a.twomeat.cli.commands
 
+import net.nanai10a.twomeat.cli.usecases.SessionData
+
 class CommandListener {
     private val functions = mutableListOf<CommandFunction>()
     fun addCommandFunction(vararg functions: CommandFunction) {
@@ -10,7 +12,7 @@ class CommandListener {
         this.functions.removeAll(functions)
     }
 
-    private fun onCommandWithParsedArgs(args: List<String>) {
+    private fun onCommandWithParsedArgs(sessionData: SessionData, args: List<String>) {
         val matchList = mutableListOf<CommandFunction>()
         this.functions.forEach { function ->
             if (function.isCallable(args))
@@ -20,11 +22,11 @@ class CommandListener {
         if (matchList.size >= 2)
             throw RuntimeException("commands was matched 2 or more command_function! (expect 1 or none)")
 
-        matchList.firstOrNull()?.call(args)
+        matchList.firstOrNull()?.call(sessionData, args)
     }
 
-    fun onCommand(nonParsedArgs: String) {
-        this.onCommandWithParsedArgs(parseCommand(nonParsedArgs))
+    fun onCommand(sessionData: SessionData, nonParsedArgs: String) {
+        this.onCommandWithParsedArgs(sessionData, parseCommand(nonParsedArgs))
     }
 }
 
