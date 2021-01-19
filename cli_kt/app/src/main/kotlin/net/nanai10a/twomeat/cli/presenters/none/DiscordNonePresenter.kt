@@ -5,7 +5,7 @@ class DiscordNonePresenter(private val transmissioner: DiscordNoneEventTransmiss
         transmissioner.transmission(
             DiscordNoneEvent(
                 output.sessionData,
-                DiscordNoneViewModel(output.rawString)
+                DiscordNoneViewModel(output.args)
             )
         )
 }

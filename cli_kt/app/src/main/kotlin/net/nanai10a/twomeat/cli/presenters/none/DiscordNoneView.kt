@@ -8,6 +8,9 @@ import net.nanai10a.twomeat.cli.usecases.SessionData
 
 class DiscordNoneView(override val jda: JDA, private val destinationStore: DiscordViewDestinationStore) :
     IDiscordView<DiscordNoneViewModel> {
-    override fun invoke(sessionData: SessionData, model: DiscordNoneViewModel) =
-        this.send(destinationStore.store[sessionData]!!, DiscordMessage(charSequence = model.rawString))
+    override fun invoke(sessionData: SessionData, model: DiscordNoneViewModel) {
+
+
+        this.send(destinationStore.store[sessionData]!!, DiscordMessage(TODO()))
+    }
 }

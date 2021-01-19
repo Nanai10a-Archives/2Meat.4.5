@@ -1,12 +1,13 @@
 package net.nanai10a.twomeat.cli.controllers
 
 import net.nanai10a.twomeat.cli.presenters.none.DiscordNonePresenter
+import net.nanai10a.twomeat.cli.presenters.none.NoneOutputData
 import net.nanai10a.twomeat.cli.usecases.SessionData
 
 class NoneController(
-    presenter: DiscordNonePresenter
+    private val presenter: DiscordNonePresenter
 ) {
-    fun a(sessionData: SessionData) {
-
+    fun send(sessionData: SessionData, args: List<String>) {
+        presenter.complete(NoneOutputData(sessionData, args))
     }
 }
