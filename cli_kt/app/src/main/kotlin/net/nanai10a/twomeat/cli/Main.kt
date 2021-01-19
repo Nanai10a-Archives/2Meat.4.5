@@ -7,9 +7,6 @@ import net.nanai10a.twomeat.cli.commands.CommandListener
 import net.nanai10a.twomeat.cli.controllers.IdController
 import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.inits.productionDI
-import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.user.save.DiscordUserSaveEventTransmissioner
 import net.nanai10a.twomeat.cli.utils.Env
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
 
