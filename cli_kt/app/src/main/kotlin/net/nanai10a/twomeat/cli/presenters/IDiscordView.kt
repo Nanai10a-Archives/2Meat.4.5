@@ -40,4 +40,8 @@ interface IDiscordView<M> {
     }
 }
 
-data class DiscordMessage(val charSequence: CharSequence?, val message: Message?, val embed: MessageEmbed?)
+data class DiscordMessage(
+    val charSequence: CharSequence? = null,
+    val message: Message? = null,
+    val embed: MessageEmbed? = null
+)

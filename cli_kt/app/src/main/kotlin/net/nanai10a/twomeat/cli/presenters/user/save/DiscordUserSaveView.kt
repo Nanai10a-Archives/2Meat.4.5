@@ -13,6 +13,6 @@ class DiscordUserSaveView(override val jda: JDA, private val destinationStore: D
         val embed = EmbedBuilder()
             .addField("User:save - Result", "Success!", false).build()
 
-        this.send(destinationStore.store[sessionData]!!, DiscordMessage(null, null, embed))
+        this.send(destinationStore.store[sessionData]!!, DiscordMessage(embed = embed))
     }
 }

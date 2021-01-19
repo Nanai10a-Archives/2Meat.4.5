@@ -14,6 +14,6 @@ class DiscordUserGetView(override val jda: JDA, private val destinationStore: Di
             .addField("User:get - Result", model.json, false)
             .build()
 
-        this.send(destinationStore.store[sessionData]!!, DiscordMessage(null, null, embed))
+        this.send(destinationStore.store[sessionData]!!, DiscordMessage(embed = embed))
     }
 }

@@ -14,6 +14,6 @@ class DiscordIdGetView(override val jda: JDA, private val destinationStore: Disc
             .addField("Id:get - Result", model.id, false)
             .build()
 
-        this.send(destinationStore.store[sessionData]!!, DiscordMessage(null, null, embed))
+        this.send(destinationStore.store[sessionData]!!, DiscordMessage(embed = embed))
     }
 }
