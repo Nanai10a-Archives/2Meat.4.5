@@ -105,5 +105,11 @@ fun parseCommand(rawArgs: String): List<String> {
         charBuffer.add(char)
     }
 
+    var lastArg = ""
+    charBuffer.forEach { _char ->
+        lastArg += _char
+    }
+    commands.add(lastArg)
+
     return commands
 }
