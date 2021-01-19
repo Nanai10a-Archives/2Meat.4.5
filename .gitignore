@@ -6,3 +6,5 @@
 
 # 環境変数を設定するscript
 env.sh
+
+**/*.log
