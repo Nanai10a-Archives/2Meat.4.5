@@ -5,7 +5,7 @@ interface EventReceiver<E> {
 }
 
 interface EventTransmissioner<E> {
-    val receivers: MutableList<EventReceiver<E>> get() = throw RuntimeException("don't access this.")
+    val receivers: MutableList<EventReceiver<E>>
     fun addReceivers(vararg receivers: EventReceiver<E>) {
         this.receivers.addAll(receivers)
     }
