@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.nanai10a.twomeat.cli.commands.CommandListener
+import net.nanai10a.twomeat.cli.commands.impl.PingPongCommand
 import net.nanai10a.twomeat.cli.controllers.*
 import net.nanai10a.twomeat.cli.inits.productionDI
 import net.nanai10a.twomeat.cli.usecases.SessionData
@@ -24,10 +25,13 @@ fun main() {
 
     val userController = service.create(UserController::class.java)
     val idController = service.create(IdController::class.java)
+    val noneController = service.create(NoneController::class.java)
 
     val commandListener = CommandListener()
 
-    // add commands.
+    with(commandListener) {
+        addCommandFunction(PingPongCommand(noneController))
+    }
 
     jda.addEventListener(object : ListenerAdapter() {
         override fun onMessageReceived(event: MessageReceivedEvent) {
