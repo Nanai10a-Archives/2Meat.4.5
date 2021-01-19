@@ -5,8 +5,11 @@ import net.nanai10a.twomeat.cli.usecases.SessionData
 interface CommandFunction {
     val info: CommandFunctionInfo
     fun isCallable(args: List<String>): Boolean {
+        if (args.size < this.info.prefixes.size)
+            return false
+
         val isPrefixesMatch =
-            args.slice(this.info.prefixes.indices)
+            args.subList(0, this.info.prefixes.size)
                 .containsAll(this.info.prefixes)
 
         val isCommandLengthMatch =
