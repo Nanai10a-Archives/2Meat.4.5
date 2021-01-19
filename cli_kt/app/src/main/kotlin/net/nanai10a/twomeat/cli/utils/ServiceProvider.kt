@@ -16,6 +16,6 @@ class ServiceProvider(internal val env: Env = Env()) {
             throw Exception("The specified interface was not registered!")
 
         @Suppress("UNCHECKED_CAST")
-        return this.constructors[targetClass] as T
+        return this.constructors[targetClass]!!() as T
     }
 }
