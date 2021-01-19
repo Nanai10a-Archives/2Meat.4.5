@@ -3,12 +3,14 @@ package net.nanai10a.twomeat.cli.inits
 import net.dv8tion.jda.api.JDA
 import net.nanai10a.twomeat.cli.controllers.DiscordViewDestinationStore
 import net.nanai10a.twomeat.cli.controllers.IdController
+import net.nanai10a.twomeat.cli.controllers.NoneController
 import net.nanai10a.twomeat.cli.controllers.UserController
 import net.nanai10a.twomeat.cli.gateways.id.IIdRepository
 import net.nanai10a.twomeat.cli.gateways.id.RedisIdRepository
 import net.nanai10a.twomeat.cli.gateways.user.IUserRepository
 import net.nanai10a.twomeat.cli.gateways.user.RedisUserRepository
 import net.nanai10a.twomeat.cli.presenters.id.get.*
+import net.nanai10a.twomeat.cli.presenters.none.*
 import net.nanai10a.twomeat.cli.presenters.user.get.*
 import net.nanai10a.twomeat.cli.presenters.user.save.*
 import net.nanai10a.twomeat.cli.usecases.id.get.IIdGetUsecase
@@ -42,13 +44,28 @@ fun ServiceProvider.discordViewDI(
         )
     }
 
+    register(DiscordIdGetView::class.java) {
+        DiscordIdGetView(
+            jda,
+            destinationStore
+        )
+    }
+
+    register(DiscordNoneView::class.java) {
+        DiscordNoneView(
+            jda,
+            destinationStore
+        )
+    }
+
     return this
 }
 
 fun ServiceProvider.transmissionerDI(
     userGetTransmissioner: DiscordUserGetEventTransmissioner = DiscordUserGetEventTransmissioner(),
     userSaveTransmissioner: DiscordUserSaveEventTransmissioner = DiscordUserSaveEventTransmissioner(),
-    idGetTransmissioner: DiscordIdGetEventTransmissioner = DiscordIdGetEventTransmissioner()
+    idGetTransmissioner: DiscordIdGetEventTransmissioner = DiscordIdGetEventTransmissioner(),
+    noneTransmissioner: DiscordNoneEventTransmissioner = DiscordNoneEventTransmissioner()
 ): ServiceProvider {
     register(DiscordUserGetEventTransmissioner::class.java) {
         userGetTransmissioner
@@ -60,6 +77,10 @@ fun ServiceProvider.transmissionerDI(
 
     register(DiscordIdGetEventTransmissioner::class.java) {
         idGetTransmissioner
+    }
+
+    register(DiscordNoneEventTransmissioner::class.java) {
+        noneTransmissioner
     }
 
     return this
@@ -81,6 +102,12 @@ fun ServiceProvider.subscribeReceiver(): ServiceProvider {
     create(DiscordIdGetEventTransmissioner::class.java).addReceivers(
         DiscordIdGetEventReceiver(
             create(DiscordIdGetView::class.java)
+        )
+    )
+
+    create(DiscordNoneEventTransmissioner::class.java).addReceivers(
+        DiscordNoneEventReceiver(
+            create(DiscordNoneView::class.java)
         )
     )
 
@@ -112,6 +139,12 @@ fun ServiceProvider.presenterDI(): ServiceProvider {
     register(IIdGetPresenter::class.java) {
         DiscordIdGetPresenter(
             create(DiscordIdGetEventTransmissioner::class.java)
+        )
+    }
+
+    register((INonePresenter::class.java)) {
+        DiscordNonePresenter(
+            create(DiscordNoneEventTransmissioner::class.java)
         )
     }
 
@@ -157,6 +190,12 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
         )
     }
 
+    register(NoneController::class.java) {
+        NoneController(
+            create(INonePresenter::class.java)
+        )
+    }
+
     return this
 }
 
@@ -176,10 +215,6 @@ fun ServiceProvider.productionDI(jda: JDA, destinationStore: DiscordViewDestinat
     // Usecase(Interactor)に依存
     controllerDI()
 
-
-    create(DiscordUserGetView::class.java)
-    create(DiscordUserSaveView::class.java)
-    create(DiscordIdGetView::class.java)
 
     return this
 }
