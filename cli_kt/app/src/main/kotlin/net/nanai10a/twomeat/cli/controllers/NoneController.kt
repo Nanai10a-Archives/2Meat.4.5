@@ -11,8 +11,11 @@ class NoneController(
     //        そう考えるとCommandごとにUsecaseが発生して動作を定義しなければなりません(Useのcasesだから当たり前なんですが...<-
 ) {
     fun send(sessionData: SessionData, args: List<String>) {
-        val message = DiscordMessage(TODO())
+        var message: DiscordMessage? = null
 
-        presenter.complete(NoneOutputData(sessionData, message))
+        if (args[0] == "!ping")
+            message = DiscordMessage("pong!")
+
+        message?.let { presenter.complete(NoneOutputData(sessionData, it)) }
     }
 }
