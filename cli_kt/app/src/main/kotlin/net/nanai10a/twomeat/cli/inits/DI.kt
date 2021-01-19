@@ -8,18 +8,9 @@ import net.nanai10a.twomeat.cli.gateways.id.IIdRepository
 import net.nanai10a.twomeat.cli.gateways.id.RedisIdRepository
 import net.nanai10a.twomeat.cli.gateways.user.IUserRepository
 import net.nanai10a.twomeat.cli.gateways.user.RedisUserRepository
-import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetPresenter
-import net.nanai10a.twomeat.cli.presenters.id.get.DiscordIdGetView
-import net.nanai10a.twomeat.cli.presenters.id.get.IIdGetPresenter
-import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetPresenter
-import net.nanai10a.twomeat.cli.presenters.user.get.DiscordUserGetView
-import net.nanai10a.twomeat.cli.presenters.user.get.IUserGetPresenter
-import net.nanai10a.twomeat.cli.presenters.user.save.DiscordUserSaveEventTransmissioner
-import net.nanai10a.twomeat.cli.presenters.user.save.DiscordUserSavePresenter
-import net.nanai10a.twomeat.cli.presenters.user.save.DiscordUserSaveView
-import net.nanai10a.twomeat.cli.presenters.user.save.IUserSavePresenter
+import net.nanai10a.twomeat.cli.presenters.id.get.*
+import net.nanai10a.twomeat.cli.presenters.user.get.*
+import net.nanai10a.twomeat.cli.presenters.user.save.*
 import net.nanai10a.twomeat.cli.usecases.id.get.IIdGetUsecase
 import net.nanai10a.twomeat.cli.usecases.id.get.IdGetInteractor
 import net.nanai10a.twomeat.cli.usecases.user.get.IUserGetUsecase
@@ -29,7 +20,10 @@ import net.nanai10a.twomeat.cli.usecases.user.save.UserSaveInteractor
 import net.nanai10a.twomeat.cli.utils.ServiceProvider
 import redis.clients.jedis.Jedis
 
-fun ServiceProvider.discordViewDI(jda: JDA, destinationStore: DiscordViewDestinationStore): ServiceProvider {
+fun ServiceProvider.discordViewDI(
+    jda: JDA,
+    destinationStore: DiscordViewDestinationStore = DiscordViewDestinationStore()
+): ServiceProvider {
     register(
         DiscordUserGetView::class.java
     ) {
@@ -51,19 +45,10 @@ fun ServiceProvider.discordViewDI(jda: JDA, destinationStore: DiscordViewDestina
     return this
 }
 
-fun ServiceProvider.repositoryDI(): ServiceProvider {
-    val jedis = Jedis(this.env.redisIp, this.env.redisPort)
-
-    register(IUserRepository::class.java) { RedisUserRepository(jedis) }
-    register(IIdRepository::class.java) { RedisIdRepository(jedis) }
-
-    return this
-}
-
 fun ServiceProvider.transmissionerDI(
-    userGetTransmissioner: DiscordUserGetEventTransmissioner,
-    userSaveTransmissioner: DiscordUserSaveEventTransmissioner,
-    idGetTransmissioner: DiscordIdGetEventTransmissioner
+    userGetTransmissioner: DiscordUserGetEventTransmissioner = DiscordUserGetEventTransmissioner(),
+    userSaveTransmissioner: DiscordUserSaveEventTransmissioner = DiscordUserSaveEventTransmissioner(),
+    idGetTransmissioner: DiscordIdGetEventTransmissioner = DiscordIdGetEventTransmissioner()
 ): ServiceProvider {
     register(DiscordUserGetEventTransmissioner::class.java) {
         userGetTransmissioner
@@ -76,6 +61,37 @@ fun ServiceProvider.transmissionerDI(
     register(DiscordIdGetEventTransmissioner::class.java) {
         idGetTransmissioner
     }
+
+    return this
+}
+
+fun ServiceProvider.subscribeReceiver(): ServiceProvider {
+    create(DiscordUserGetEventTransmissioner::class.java).addReceivers(
+        DiscordUserGetEventReceiver(
+            create(DiscordUserGetView::class.java)
+        )
+    )
+
+    create(DiscordUserSaveEventTransmissioner::class.java).addReceivers(
+        DiscordUserSaveEventReceiver(
+            create(DiscordUserSaveView::class.java)
+        )
+    )
+
+    create(DiscordIdGetEventTransmissioner::class.java).addReceivers(
+        DiscordIdGetEventReceiver(
+            create(DiscordIdGetView::class.java)
+        )
+    )
+
+    return this
+}
+
+fun ServiceProvider.repositoryDI(
+    jedis: Jedis = Jedis(this.env.redisIp, this.env.redisPort)
+): ServiceProvider {
+    register(IUserRepository::class.java) { RedisUserRepository(jedis) }
+    register(IIdRepository::class.java) { RedisIdRepository(jedis) }
 
     return this
 }
@@ -145,18 +161,14 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
 }
 
 fun ServiceProvider.productionDI(jda: JDA): ServiceProvider {
-    val viewDestinationStore = DiscordViewDestinationStore()
-
-    val userGetTransmissioner = DiscordUserGetEventTransmissioner()
-    val userSaveTransmissioner = DiscordUserSaveEventTransmissioner()
-    val idGetTransmissioner =  DiscordIdGetEventTransmissioner()
-
     // 依存なし
-    discordViewDI(jda, viewDestinationStore)
+    discordViewDI(jda)
+    // 依存なし
+    transmissionerDI()
+    // Transmissionerが無いと動作しない.
+    subscribeReceiver()
     // 依存なし
     repositoryDI()
-    // 依存なし
-    transmissionerDI(userGetTransmissioner, userSaveTransmissioner, idGetTransmissioner)
     // Transceiverに依存
     presenterDI()
     // Repository, Presenterに依存
