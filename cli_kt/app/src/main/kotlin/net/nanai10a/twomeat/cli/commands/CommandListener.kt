@@ -50,6 +50,7 @@ fun parseCommand(rawArgs: String): List<String> {
         // 1.
         if (isNextCharEscape) {
             charBuffer.add(char)
+            isNextCharEscape = false
             return@forEach
         }
 
