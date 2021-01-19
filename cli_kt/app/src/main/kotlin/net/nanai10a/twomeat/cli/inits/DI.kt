@@ -22,7 +22,7 @@ import redis.clients.jedis.Jedis
 
 fun ServiceProvider.discordViewDI(
     jda: JDA,
-    destinationStore: DiscordViewDestinationStore = DiscordViewDestinationStore()
+    destinationStore: DiscordViewDestinationStore
 ): ServiceProvider {
     register(
         DiscordUserGetView::class.java
@@ -160,9 +160,9 @@ fun ServiceProvider.controllerDI(): ServiceProvider {
     return this
 }
 
-fun ServiceProvider.productionDI(jda: JDA): ServiceProvider {
+fun ServiceProvider.productionDI(jda: JDA, destinationStore: DiscordViewDestinationStore): ServiceProvider {
     // 依存なし
-    discordViewDI(jda)
+    discordViewDI(jda, destinationStore)
     // 依存なし
     transmissionerDI()
     // Transmissionerが無いと動作しない.

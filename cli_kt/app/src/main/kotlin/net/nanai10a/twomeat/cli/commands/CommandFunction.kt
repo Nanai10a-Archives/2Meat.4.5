@@ -1,5 +1,7 @@
 package net.nanai10a.twomeat.cli.commands
 
+import net.nanai10a.twomeat.cli.usecases.SessionData
+
 interface CommandFunction {
     val info: CommandFunctionInfo
     fun isCallable(args: List<String>): Boolean {
@@ -14,5 +16,5 @@ interface CommandFunction {
         return isPrefixesMatch && isCommandLengthMatch
     }
 
-    fun call(args: List<String>)
+    fun call(sessionData: SessionData, args: List<String>)
 }
