@@ -6,7 +6,7 @@ import net.nanai10a.twomeat.cli.controllers.NoneController
 import net.nanai10a.twomeat.cli.usecases.SessionData
 
 class PingPongCommand(private val controller: NoneController) : CommandFunction {
-    override val info: CommandFunctionInfo = CommandFunctionInfo(1, listOf(""), false)
+    override val info: CommandFunctionInfo = CommandFunctionInfo(1, listOf("!ping"), false)
     override fun call(sessionData: SessionData, args: List<String>) =
         controller.send(sessionData, args)
 }
