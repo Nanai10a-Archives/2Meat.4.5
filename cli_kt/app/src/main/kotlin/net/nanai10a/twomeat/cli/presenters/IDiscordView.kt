@@ -13,25 +13,25 @@ interface IDiscordView<M> {
     fun send(destination: DiscordDestination, message: DiscordMessage) {
         message.charSequence?.let {
             return when (destination.types) {
-                DiscordViewDestinationTypes.PRIVATE -> this.jda.getTextChannelById(destination.channelId)!!
+                DiscordViewDestinationTypes.PRIVATE -> this.jda.getPrivateChannelById(destination.channelId)!!
                     .sendMessage(it).queue()
-                DiscordViewDestinationTypes.GUILD -> this.jda.getPrivateChannelById(destination.channelId)!!
+                DiscordViewDestinationTypes.GUILD -> this.jda.getTextChannelById(destination.channelId)!!
                     .sendMessage(it).queue()
             }
         }
         message.message?.let {
             return when (destination.types) {
-                DiscordViewDestinationTypes.PRIVATE -> this.jda.getTextChannelById(destination.channelId)!!
+                DiscordViewDestinationTypes.PRIVATE -> this.jda.getPrivateChannelById(destination.channelId)!!
                     .sendMessage(it).queue()
-                DiscordViewDestinationTypes.GUILD -> this.jda.getPrivateChannelById(destination.channelId)!!
+                DiscordViewDestinationTypes.GUILD -> this.jda.getTextChannelById(destination.channelId)!!
                     .sendMessage(it).queue()
             }
         }
         message.embed?.let {
             return when (destination.types) {
-                DiscordViewDestinationTypes.PRIVATE -> this.jda.getTextChannelById(destination.channelId)!!
+                DiscordViewDestinationTypes.PRIVATE -> this.jda.getPrivateChannelById(destination.channelId)!!
                     .sendMessage(it).queue()
-                DiscordViewDestinationTypes.GUILD -> this.jda.getPrivateChannelById(destination.channelId)!!
+                DiscordViewDestinationTypes.GUILD -> this.jda.getTextChannelById(destination.channelId)!!
                     .sendMessage(it).queue()
             }
         }
