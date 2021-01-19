@@ -1,4 +1,4 @@
-source ./env.sh || exit
+source ./env.sh
 
 cd ./cli_kt || exit
 
