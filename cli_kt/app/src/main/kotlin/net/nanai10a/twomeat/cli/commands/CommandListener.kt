@@ -40,13 +40,13 @@ class CommandListener {
  *
  * ※スペース: 半角, 全角, TAB, 改行(\r & \n)
  */
-fun parseCommand(rawCommand: String): List<String> {
+fun parseCommand(rawArgs: String): List<String> {
     val commands = mutableListOf<String>()
     val charBuffer = mutableListOf<Char>()
     var isReamingDoubleQuotation = false
     var isNextCharEscape = false
 
-    rawCommand.forEach { char ->
+    rawArgs.forEach { char ->
         // 1.
         if (isNextCharEscape) {
             charBuffer.add(char)
@@ -89,14 +89,14 @@ fun parseCommand(rawCommand: String): List<String> {
             if (charBuffer.isEmpty())
                 return@forEach
 
-            var command = ""
+            var arg = ""
             charBuffer.forEach { _char ->
-                command += command + _char
+                arg += _char
             }
 
             charBuffer.clear()
 
-            commands.add(command)
+            commands.add(arg)
             return@forEach
         }
 
